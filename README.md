@@ -20,8 +20,26 @@ fc = FileCache()
 fc.cache(key, value)
 # 设置具有有效期的缓存 Set cache with an expiration date（单位是秒）
 fc.cache(key, value, expiration_seconds)
-# 读取缓存
+# 读取缓存 Get cache
 fc.cache(key)
+# 删除 Remove cache
+fc.rm(key)
+```
+
+## 一些实例 Some examples
+
+```python
+from filecaching import FileCache
+fc = FileCache()
+# 设置缓存 Set cache
+fc.cache('a', {'v': 'abc'})
+# 设置具有有效期的缓存 Set cache with an expiration date (30s)
+fc.cache('b', [1,2,3], 30)
+# 读取缓存 Get cache
+print(fc.cache('a'))
+print(fc.cache('b'))
+# 删除 Remove cache
+fc.rm('a')
 ```
 
 ## LICENSE

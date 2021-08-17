@@ -14,7 +14,9 @@ pip install filecaching
 ```python
 # 引入 Import
 from filecaching import FileCache
-# 实例化 Instantiate（可以使用FileCache(cache_path)指定缓存目录路径）(You can use FileCache (cache_path) specify the cache directory path)
+# 实例化 Instantiate
+#（可以使用FileCache(cache_path)指定缓存目录路径）
+# (You can use FileCache(cache_path) specify the cache directory path)
 fc = FileCache()
 # 设置缓存 Set cache
 fc.cache(key, value)

@@ -10,13 +10,14 @@
 
 
 from setuptools import setup, find_packages
-
+filepath = 'README.md'
 setup(
     name = "filecaching",
-    version = "0.1.0",
+    version = "0.0.1",
     keywords = ("filecaching", "filecache", "cache", "file caching tool", "caching"),
     description = "A simple and easy-to-use file caching tool",
-    long_description = "A simple and easy-to-use file caching tool",
+    long_description = open(filepath, encoding='utf-8').read(),
+    long_description_content_type='text/markdown',
     license = "Apache-2.0 License",
 
     url = "https://github.com/jeeaay/python-file-cache.git",

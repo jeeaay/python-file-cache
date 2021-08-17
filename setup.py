@@ -13,7 +13,7 @@ from setuptools import setup, find_packages
 filepath = 'README.md'
 setup(
     name = "filecaching",
-    version = "0.0.2",
+    version = "0.0.3",
     keywords = ("filecaching", "filecache", "cache", "file caching tool", "caching"),
     description = "A simple and easy-to-use file caching tool",
     long_description = open(filepath, encoding='utf-8').read(),

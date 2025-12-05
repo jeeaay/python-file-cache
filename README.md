@@ -15,9 +15,10 @@ pip install filecaching
 # 引入 Import
 from filecaching import FileCache
 # 实例化 Instantiate
+fc = FileCache()
 #（可以使用FileCache(cache_path)指定缓存目录路径）
 # (You can use FileCache(cache_path) specify the cache directory path)
-fc = FileCache()
+fc = FileCache(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'cache'))
 # 设置缓存 Set cache
 fc.cache(key, value)
 # 设置具有有效期的缓存 Set cache with an expiration date（单位是秒）

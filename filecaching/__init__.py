@@ -60,12 +60,13 @@ class FileCache:
         # print(value)
         if value['exp'] == 0:
             return value['data']
-        if value['stime'] + value['exp'] < int(time.time()):
+        if value['exp'] is not None and (value['stime'] + value['exp'] < int(time.time())):
             self.rm(key)
             # print('过期')
             return None
         else:
             return value['data']
+
     def rm(self, key):
         '''
         删除缓存

@@ -13,7 +13,7 @@ from setuptools import setup, find_packages
 filepath = 'README.md'
 setup(
     name = "filecaching",
-    version = "0.0.3",
+    version = "0.0.4",
     keywords = ("filecaching", "filecache", "cache", "file caching tool", "caching"),
     description = "A simple and easy-to-use file caching tool",
     long_description = open(filepath, encoding='utf-8').read(),
@@ -22,7 +22,7 @@ setup(
 
     url = "https://github.com/jeeaay/python-file-cache.git",
     author = "Jeay",
-    author_email = "admin@jeay.net",
+    author_email = "wrjie@msn.cn",
 
     packages = find_packages(),
     include_package_data = True,

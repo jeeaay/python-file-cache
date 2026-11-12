@@ -34,6 +34,9 @@ class FileCache:
         设置缓存
         @param key: 缓存的键，字符串类型，重复设置会覆盖已有缓存
         @param value: 缓存的值，类型不限
+        @param exp: 有效期秒数，0 表示永不过期
+        注意：exp 只保证过期后读不到值（get 时顺手删除），文件真正从磁盘消失
+        取决于有没有运行清理脚本，见 purge() / purge_command()。
         '''
         cache_path = self._GetCachePath(key)
         data = {
@@ -49,7 +52,7 @@ class FileCache:
         设置缓存
         @param key: 缓存的键，字符串类型
         '''
-        cache_path = self._GetCachePath(key)
+        cache_path = self._GetCachePath(key, create=False)
         if not os.path.isfile(cache_path):
             return None
         try:
@@ -72,22 +75,43 @@ class FileCache:
         删除缓存
         @param key: 缓存的键，字符串类型
         '''
-        dir_path, filename = self._GetCachePath(key, False)
-        # 先删除文件
-        fpath = os.path.join(dir_path, filename)
-        if os.path.isfile(fpath):
-            os.remove(fpath)
-        # 判断目录是否空了
-        if len(os.listdir(dir_path)) == 0:
+        dir_path, filename = self._GetCachePath(key, False, create=False)
+        try:
+            os.remove(os.path.join(dir_path, filename))
+        except OSError:
+            pass
+        # 非空目录会自己报错，省掉 listdir 判空这一趟以及它和并发写入之间的竞态
+        try:
             os.rmdir(dir_path)
-    def _GetCachePath(self, key, join = True):
+        except OSError:
+            pass
+    def purge(self, **kwargs):
+        '''
+        就地清理本目录下已过期的缓存文件，转交 filecaching.purger 执行。
+        需要长期积累大量带过期时间缓存的场景，更推荐单独跑
+        `python -m filecaching.purger --path ...`，见 purge_command()。
+        @param kwargs: 透传给 filecaching.purger.purge()
+        '''
+        from . import purger
+        return purger.purge(self.path, **kwargs)
+    def purge_command(self, *args):
+        '''
+        返回调用清理脚本的命令行，可直接交给 subprocess 或写进 crontab。
+        用 sys.executable 而不是裸 python，避免 cron 环境里用的不是同一个解释器。
+        @param args: 附加给命令行的参数，如 '--rebuild'
+        '''
+        from . import purger
+        return purger.purge_command(self.path, *args)
+    def _GetCachePath(self, key, join = True, create = True):
         '''
         私有函数，用于统一处理缓存路径
         @param key: 缓存的键，字符串类型
+        @param join: 为 True 时返回拼接好的文件路径，否则返回 (目录, 文件名)
+        @param create: 分片目录不存在时是否创建，只读路径传 False
         '''
         key_sha1 = hashlib.sha1(key.encode()).hexdigest()[:18]
         dir_path = os.path.join(self.path, key_sha1[:2])
-        if not os.path.isdir(dir_path):
+        if create and not os.path.isdir(dir_path):
             os.mkdir(dir_path)
         if join:
             return os.path.join(dir_path, key_sha1[2:])

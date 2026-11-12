@@ -13,7 +13,7 @@ from setuptools import setup, find_packages
 filepath = 'README.md'
 setup(
     name = "filecaching",
-    version = "0.0.4",
+    version = "0.0.5",
     keywords = ("filecaching", "filecache", "cache", "file caching tool", "caching"),
     description = "A simple and easy-to-use file caching tool",
     long_description = open(filepath, encoding='utf-8').read(),
@@ -27,5 +27,16 @@ setup(
     packages = find_packages(),
     include_package_data = True,
     platforms = "any",
-    install_requires = []
+    python_requires = ">=3.6",
+    install_requires = [],
+    entry_points = {
+        "console_scripts": [
+            "filecaching-purge = filecaching.purger:main",
+        ],
+    },
+    classifiers = [
+        "License :: OSI Approved :: Apache Software License",
+        "Programming Language :: Python :: 3",
+        "Topic :: Software Development :: Libraries :: Python Modules",
+    ],
 )
